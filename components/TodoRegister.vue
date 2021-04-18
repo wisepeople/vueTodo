@@ -23,7 +23,7 @@ export default ({
     },
     methods: {
         doInsert(){
-            console.log(this.inputText);
+            console.log('doInsert', this.inputText);
             if(this.inputText != '') {
                 this.$emit('doInsert', this.inputText)
             }
