@@ -13,9 +13,11 @@
   "license": "MIT",
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "dayjs": "^1.10.4",
     "lodash": "^4.17.21",
     "lodash-uuid": "^0.0.3",
     "lowdb": "^1.0.0",
+    "moment": "^2.29.1",
     "uuid": "^3.4.0",
     "vue": "^2.6.12"
   },

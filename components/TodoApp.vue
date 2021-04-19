@@ -3,9 +3,14 @@
         <!-- <todo-list v-model="todoList"></todo-list> -->
         <div>
             <h3>list</h3>
+            <ul class="menuFilter">
+                <li><button :class="{active: filterKey=='all'}" @click="changeFilter('all')">All({{total}})</button></li>
+                <li><button :class="{active: filterKey=='active'}" @click="changeFilter('active')">Not Yet({{activeCount}})</button></li>
+                <li><button :class="{active: filterKey=='complete'}" @click="changeFilter('complete')">Completed({{completeCount}})</button></li>
+            </ul>
             <ul>
                 <todo-item 
-                    v-for="todo in todoList"
+                    v-for="todo in filteredList"
                     :key="todo.key"
                     :todo="todo"
                     v-on="$listeners"
@@ -36,7 +41,30 @@ export default ({
     data(){
         return {
             db:null,
-            todoList:[]
+            todoList:[],
+            filterKey:'all'
+        }
+    },
+    computed:{
+        filteredList(){
+            switch(this.filterKey){
+                case 'active':
+                    return _.filter(this.todoList, {done:false})
+                case 'complete':
+                    return _.filter(this.todoList,{done:true})
+                case 'all':
+                default:
+                    return this.todoList
+            }
+        },
+        total(){
+            return this.todoList.length
+        },
+        activeCount(){
+            return _.filter(this.todoList, {done:false}).length
+        },
+        completeCount(){
+            return _.filter(this.todoList, {done:true}).length
         }
     },
     methods: {
@@ -105,6 +133,9 @@ export default ({
             this.db.set('list', []).write()
             this.todoList = _.cloneDeep(this.db.getState().list)
             // this.$delete(this.todoList, 0) 모든 row를 호출하는건 비효율적
+        },
+        changeFilter(key) {
+            this.filterKey = key;
         }
     },
     created() {
@@ -112,3 +143,21 @@ export default ({
     }
 })
 </script>
+<style scoped>
+
+    ul.menuFilter>li{
+        display: inline-block;
+        width:30%;
+    }
+    ul.menuFilter>li>button{
+        width:100%;
+        height: 30px;
+        background-color:#fff;
+        border: solid 0px;
+    }
+    ul.menuFilter>li>button.active{
+        font-weight: 400;
+        color:#fff;
+        background-color:rgb(20, 20, 58);
+    }
+</style>
